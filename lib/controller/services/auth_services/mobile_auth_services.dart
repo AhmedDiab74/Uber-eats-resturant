@@ -42,8 +42,9 @@ class MobileAuthServices {
   static receiveOTP(
       {required BuildContext context, required String phoneNumber}) async {
     try {
+      print(phoneNumber);
       await auth.verifyPhoneNumber(
-        phoneNumber: "+911234567893",
+        phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credentials) {
           log(credentials.toString());
         },
