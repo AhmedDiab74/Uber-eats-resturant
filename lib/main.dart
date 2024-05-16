@@ -4,9 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:ubereatsresturant/controller/provider/mobile_auth_provider/mobile_auth_provider.dart';
 import 'package:ubereatsresturant/firebase_options.dart';
-import 'package:ubereatsresturant/view/auth_sceen/mobile_login_screen.dart';
-import 'package:ubereatsresturant/view/auth_sceen/otp_screen.dart';
+import 'package:ubereatsresturant/view/auth_screen/mobile_login_screen.dart';
+import 'package:ubereatsresturant/view/auth_screen/otp_screen.dart';
 import 'package:ubereatsresturant/view/bottom_navigation_bar/bottom_navigation_bar.dart';
+import 'package:ubereatsresturant/view/resturant_registration_screen/resturant_registration_screen.dart';
 import 'package:ubereatsresturant/view/sign_in_logic_screen/sign_in_logic_screen.dart';
 
 void main() async {
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
             child: const MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
-                home: SignInLogicScreen()));
+                home: ResturantRegistrationScreen()));
       },
     );
   }

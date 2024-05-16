@@ -9,7 +9,7 @@ import 'package:ubereatsresturant/controller/provider/mobile_auth_provider/mobil
 import 'package:ubereatsresturant/controller/services/auth_services/mobile_auth_services.dart';
 import 'package:ubereatsresturant/utils/colors.dart';
 import 'package:ubereatsresturant/utils/textStyles.dart';
-import 'package:ubereatsresturant/view/auth_sceen/otp_screen.dart';
+import 'package:ubereatsresturant/view/auth_screen/otp_screen.dart';
 
 class MobileLoginScreen extends StatefulWidget {
   const MobileLoginScreen({super.key});
@@ -125,17 +125,17 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
               setState(() {
                 receiveOTP = true;
               });
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      child: const OTPScreen(),
-                      type: PageTransitionType.rightToLeft));
-              // context.read<MobileAuthProvider>().updateMobileNumber(
-              //     '$selectedCountry ${mobileController.text.trim()}');
-              // MobileAuthServices.receiveOTP(
-              //     context: context,
-              //     phoneNumber:
-              //         '$selectedCountry${mobileController.text.trim()}');
+              // Navigator.push(
+              //     context,
+              //     PageTransition(
+              //         child: const OTPScreen(),
+              //         type: PageTransitionType.rightToLeft));
+              context.read<MobileAuthProvider>().updateMobileNumber(
+                  '$selectedCountry ${mobileController.text.trim()}');
+              MobileAuthServices.receiveOTP(
+                  context: context,
+                  phoneNumber:
+                      '$selectedCountry${mobileController.text.trim()}');
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: black, minimumSize: Size(90.w, 6.h)),

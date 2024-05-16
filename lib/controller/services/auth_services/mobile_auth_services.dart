@@ -11,11 +11,49 @@ import 'package:provider/provider.dart';
 
 import 'package:ubereatsresturant/constant/constant.dart';
 import 'package:ubereatsresturant/controller/provider/mobile_auth_provider/mobile_auth_provider.dart';
-import 'package:ubereatsresturant/view/auth_sceen/mobile_login_screen.dart';
+import 'package:ubereatsresturant/view/auth_screen/mobile_login_screen.dart';
+import 'package:ubereatsresturant/view/auth_screen/otp_screen.dart';
 import 'package:ubereatsresturant/view/bottom_navigation_bar/bottom_navigation_bar.dart';
+import 'package:ubereatsresturant/view/resturant_registration_screen/resturant_registration_screen.dart';
 import 'package:ubereatsresturant/view/sign_in_logic_screen/sign_in_logic_screen.dart';
 
 class MobileAuthServices {
+  static checkRestaurantRegistration({required BuildContext context}) async {
+    bool restaurantRegistration = false;
+    try {
+      await firebaseFirestore
+          .collection(collectionRestuarant)
+          .where(collectionRestaurantUID, isEqualTo: auth.currentUser!.uid)
+          .get()
+          .then((value) {
+        value.size > 0
+            ? restaurantRegistration = true
+            : restaurantRegistration = false;
+        log('Resturant is Registerd = $restaurantRegistration');
+        if (restaurantRegistration) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              PageTransition(
+                child: const BottomNavigationBarUberEats(),
+                type: PageTransitionType.rightToLeft,
+              ),
+              (route) => false);
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context,
+              PageTransition(
+                child: const ResturantRegistrationScreen(),
+                type: PageTransitionType.rightToLeft,
+              ),
+              (route) => false);
+        }
+      });
+    } catch (e) {
+      log(e.toString());
+      throw Exception(e);
+    }
+  }
+
   static bool checkAuthentication(BuildContext context) {
     User? user = auth.currentUser;
     if (user == null) {
@@ -28,13 +66,7 @@ class MobileAuthServices {
           (route) => false);
       return false;
     } else {
-      Navigator.pushAndRemoveUntil(
-          context,
-          PageTransition(
-            child: const BottomNavigationBarUberEats(),
-            type: PageTransitionType.leftToRight,
-          ),
-          (route) => false);
+      checkRestaurantRegistration(context: context);
       return true;
     }
   }
@@ -42,9 +74,8 @@ class MobileAuthServices {
   static receiveOTP(
       {required BuildContext context, required String phoneNumber}) async {
     try {
-      print(phoneNumber);
       await auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
+        phoneNumber: '+201099527790',
         verificationCompleted: (PhoneAuthCredential credentials) {
           log(credentials.toString());
         },
@@ -56,11 +87,11 @@ class MobileAuthServices {
           context
               .read<MobileAuthProvider>()
               .updateVerificationID(verficationID);
-          // Navigator.push(
-          //     context,
-          //     PageTransition(
-          //         child: const OTPScreen(),
-          //         type: PageTransitionType.rightToLeft));
+          Navigator.push(
+              context,
+              PageTransition(
+                  child: const OTPScreen(),
+                  type: PageTransitionType.rightToLeft));
         },
         codeAutoRetrievalTimeout: (String verficationID) {},
       );

@@ -5,6 +5,7 @@ import 'package:ubereatsresturant/view/account/account.dart';
 import 'package:ubereatsresturant/view/add_food_item/add_food_item.dart';
 import 'package:ubereatsresturant/view/home/home.dart';
 import 'package:ubereatsresturant/view/menu_screen/menu_screen.dart';
+import 'package:ubereatsresturant/view/resturant_registration_screen/resturant_registration_screen.dart';
 import 'package:ubereatsresturant/view/status_screen/status_screen.dart';
 
 class BottomNavigationBarUberEats extends StatefulWidget {
@@ -24,7 +25,7 @@ class _BottomNavigationBarUberEatsState
     return PersistentTabView(
       tabs: [
         PersistentTabConfig(
-          screen: const HomeScreen(),
+          screen: const ResturantRegistrationScreen(),
           item: ItemConfig(
             icon: const FaIcon(FontAwesomeIcons.house),
             title: "Home",
