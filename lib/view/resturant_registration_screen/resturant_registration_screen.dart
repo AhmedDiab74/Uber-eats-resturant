@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -5,10 +7,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:ubereatsresturant/constant/constant.dart';
 import 'package:ubereatsresturant/controller/provider/resturant_register_provider/resturant_register_provider.dart';
 import 'package:ubereatsresturant/controller/services/images_services/images_services.dart';
+import 'package:ubereatsresturant/controller/services/location_services/location_services.dart';
+import 'package:ubereatsresturant/controller/services/resturant_crud_services/resturant_crud_services.dart';
+import 'package:ubereatsresturant/model/address_model.dart';
+import 'package:ubereatsresturant/model/restaurant_mode.dart';
 import 'package:ubereatsresturant/utils/colors.dart';
 import 'package:ubereatsresturant/utils/textStyles.dart';
 import 'package:ubereatsresturant/widgets/custom_text_field.dart';
@@ -132,8 +140,37 @@ class _ResturantRegistrationScreenState
               hintText: "Registration Number",
             ),
             SizedBox(
-              height: 2.h,
+              height: 30.h,
             ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: black,
+                  minimumSize: Size(90.w, 6.h),
+                ),
+                onPressed: () async {
+                  await context
+                      .read<ResturantRegisterProvider>()
+                      .updateResturantBannerImagesUrl(context);
+                  Position currentAddress =
+                      await LocationServices.getCurrentLocation();
+                  RestaurantModel data = RestaurantModel(
+                    restaurantName: resturantNameController.text.trim(),
+                    restaurantLicenseNumber:
+                        resturantLicenceNumberController.text.trim(),
+                    restaurantUID: auth.currentUser!.uid,
+                    address: AddressModel(
+                        latitude: currentAddress.latitude,
+                        longitude: currentAddress.longitude),
+                    bannerImages: context
+                        .read<ResturantRegisterProvider>()
+                        .resturantBannerImagesUrl,
+                  );
+                  ResturantCrudServices.registerResturant(data, context);
+                },
+                child: Text(
+                  "Register",
+                  style: AppTextStyles.body16Bold.copyWith(color: white),
+                ))
           ],
         ),
       ),
