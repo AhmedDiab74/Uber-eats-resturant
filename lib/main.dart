@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:ubereatsresturant/controller/provider/mobile_auth_provider/mobile_auth_provider.dart';
+import 'package:ubereatsresturant/controller/provider/resturant_register_provider/resturant_register_provider.dart';
 import 'package:ubereatsresturant/firebase_options.dart';
 import 'package:ubereatsresturant/view/auth_screen/mobile_login_screen.dart';
 import 'package:ubereatsresturant/view/auth_screen/otp_screen.dart';
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
             providers: [
               ChangeNotifierProvider<MobileAuthProvider>(
                 create: (_) => MobileAuthProvider(),
+              ),
+              ChangeNotifierProvider<ResturantRegisterProvider>(
+                create: (_) => ResturantRegisterProvider(),
               ),
             ],
             child: const MaterialApp(
