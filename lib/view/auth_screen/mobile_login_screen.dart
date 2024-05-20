@@ -58,9 +58,9 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                     showPhoneCode: true,
                     onSelect: (Country country) {
                       setState(() {
-                        selectedCountry = country.flagEmoji;
+                        selectedCountry = "+${country.phoneCode}";
                       });
-                      print('Select country: ${country.displayName}');
+                      print('Select country: ${selectedCountry}');
                     });
               },
               child: Container(
@@ -131,7 +131,7 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
               //         child: const OTPScreen(),
               //         type: PageTransitionType.rightToLeft));
               context.read<MobileAuthProvider>().updateMobileNumber(
-                  '$selectedCountry ${mobileController.text.trim()}');
+                  '$selectedCountry${mobileController.text.trim()}');
               MobileAuthServices.receiveOTP(
                   context: context,
                   phoneNumber:

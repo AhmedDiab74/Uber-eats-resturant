@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'dart:io';
 
@@ -6,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ubereatsresturant/constant/constant.dart';
+import 'package:ubereatsresturant/controller/services/toas_services/toas_services.dart';
 
 class ImagesServices {
   static getImagesFromGallery({required BuildContext context}) async {
@@ -18,7 +21,11 @@ class ImagesServices {
         selectedImages.add(File(image.path));
       }
     } else {
-      //Show toast message
+      ToastService.sendScaffoldAlert(
+        msg: "No Images Selected",
+        toastStatus: "WARNING",
+        context: context,
+      );
     }
     log('The Images are\n ${selectedImages.toList().toString()}');
     return selectedImages;
@@ -37,5 +44,23 @@ class ImagesServices {
       imagesUrl.add(imageUrl);
     });
     return imagesUrl;
+  }
+
+  static pickSingleImage({required BuildContext context}) async {
+    File? selectedImages;
+    final pickedFile =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
+
+    XFile? filePick = pickedFile;
+    if (filePick != null) {
+      selectedImages = File(filePick.path);
+      return selectedImages;
+    } else {
+      ToastService.sendScaffoldAlert(
+        msg: "No Image Selected",
+        toastStatus: "WARNING",
+        context: context,
+      );
+    }
   }
 }

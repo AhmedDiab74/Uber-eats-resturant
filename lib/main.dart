@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:ubereatsresturant/controller/provider/add_food_provider/add_food_provider.dart';
 import 'package:ubereatsresturant/controller/provider/mobile_auth_provider/mobile_auth_provider.dart';
 import 'package:ubereatsresturant/controller/provider/resturant_register_provider/resturant_register_provider.dart';
 import 'package:ubereatsresturant/firebase_options.dart';
@@ -35,11 +36,14 @@ class MyApp extends StatelessWidget {
               ChangeNotifierProvider<ResturantRegisterProvider>(
                 create: (_) => ResturantRegisterProvider(),
               ),
+              ChangeNotifierProvider<AddFoodProvider>(
+                create: (_) => AddFoodProvider(),
+              ),
             ],
             child: const MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
-                home: ResturantRegistrationScreen()));
+                home: BottomNavigationBarUberEats()));
       },
     );
   }

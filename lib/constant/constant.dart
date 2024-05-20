@@ -11,3 +11,5 @@ FirebaseStorage storage = FirebaseStorage.instance;
 FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 const String collectionRestuarant = "Resturant";
 const String collectionRestaurantUID = "restaurantUID";
+const String collectionFood = "Food";
+const geofirePath = "Resturants";

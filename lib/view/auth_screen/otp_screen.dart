@@ -73,13 +73,13 @@ class _OTPScreenState extends State<OTPScreen> {
             bottom: 3.h,
             child: ElevatedButton(
                 onPressed: () {
-                  // MobileAuthServices.verifyOTP(
-                  //     context: context, smsCode: otpController.text.trim());
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          child: const BottomNavigationBarUberEats(),
-                          type: PageTransitionType.leftToRight));
+                  MobileAuthServices.verifyOTP(
+                      context: context, smsCode: otpController.text.trim());
+                  // Navigator.push(
+                  //     context,
+                  //     PageTransition(
+                  //         child: const BottomNavigationBarUberEats(),
+                  //         type: PageTransitionType.leftToRight));
                 },
                 style: ElevatedButton.styleFrom(
                   shape: const StadiumBorder(),
@@ -121,7 +121,7 @@ class _OTPScreenState extends State<OTPScreen> {
             ),
             PinCodeTextField(
               appContext: context,
-              length: 4,
+              length: 6,
               obscureText: false,
               animationType: AnimationType.fade,
               textStyle: AppTextStyles.body14,

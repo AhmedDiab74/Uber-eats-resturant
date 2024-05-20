@@ -2,68 +2,105 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:ubereatsresturant/constant/constant.dart';
+import 'package:ubereatsresturant/controller/provider/add_food_provider/add_food_provider.dart';
+import 'package:ubereatsresturant/controller/services/food_data_crud_services/food_data_crud_services.dart';
+import 'package:ubereatsresturant/model/add_food_model/add_food_model.dart';
 import 'package:ubereatsresturant/utils/colors.dart';
 import 'package:ubereatsresturant/utils/textStyles.dart';
+import 'package:ubereatsresturant/widgets/common_elevated_button.dart';
 import 'package:ubereatsresturant/widgets/custom_text_field.dart';
 
-class AddFoodItem extends StatefulWidget {
-  const AddFoodItem({super.key});
+class AddFoodItemScreen extends StatefulWidget {
+  const AddFoodItemScreen({super.key});
   @override
-  State<AddFoodItem> createState() => _AddFoodItemState();
+  State<AddFoodItemScreen> createState() => _AddFoodItemScreenState();
 }
 
-class _AddFoodItemState extends State<AddFoodItem> {
+class _AddFoodItemScreenState extends State<AddFoodItemScreen> {
   final TextEditingController foodNameController = TextEditingController();
   final TextEditingController foodDescriptionController =
       TextEditingController();
   final TextEditingController foodPriceController = TextEditingController();
   bool foodIsPureVegetarian = true;
+  bool pressedAddFoodItemButton = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
+            icon: const FaIcon(FontAwesomeIcons.arrowLeftLong),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
         body: ListView(
+          physics: const BouncingScrollPhysics(),
           padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
           children: [
             SizedBox(
               height: 2.h,
             ),
-            Container(
-              height: 20.h,
-              width: 943.w,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.sp), color: greyShade3),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 5.h,
-                    width: 5.h,
+            Consumer<AddFoodProvider>(
+                builder: (context, addFoodProvider, child) {
+              return InkWell(
+                onTap: () async {
+                  await addFoodProvider.pickFoodImageFromGallery(context);
+                },
+                child: Container(
+                    height: 20.h,
+                    width: 94.w,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: black,
-                      ),
-                    ),
-                    child: FaIcon(
-                      FontAwesomeIcons.plus,
-                      size: 3.h,
-                      color: black,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 1.h,
-                  ),
-                  Text(
-                    "Add",
-                    style: AppTextStyles.body14Bold,
-                  )
-                ],
-              ),
-            ),
+                        borderRadius: BorderRadius.circular(5.sp),
+                        color: greyShade3),
+                    child: Builder(
+                      builder: (context) {
+                        if (addFoodProvider.foodImage != null) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 1.h),
+                            child: Image(
+                              image: FileImage(addFoodProvider.foodImage!),
+                              fit: BoxFit.contain,
+                            ),
+                          );
+                        } else {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                height: 5.h,
+                                width: 5.h,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: black,
+                                  ),
+                                ),
+                                child: FaIcon(
+                                  FontAwesomeIcons.plus,
+                                  size: 3.h,
+                                  color: black,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 1.h,
+                              ),
+                              Text(
+                                "Add",
+                                style: AppTextStyles.body14Bold,
+                              )
+                            ],
+                          );
+                        }
+                      },
+                    )),
+              );
+            }),
             SizedBox(
               height: 4.h,
             ),
@@ -179,6 +216,41 @@ class _AddFoodItemState extends State<AddFoodItem> {
                   ),
                 )
               ],
+            ),
+            SizedBox(
+              height: 4.h,
+            ),
+            CummonElevatedButton(
+              onPressed: () async {
+                setState(() {
+                  pressedAddFoodItemButton = true;
+                });
+                await context
+                    .read<AddFoodProvider>()
+                    .uploadImageAndGetImageURL(context);
+                String foodID = uuid.v1().toString();
+                AddFoodModel data = AddFoodModel(
+                  foodID: foodID,
+                  resturantUID: auth.currentUser!.uid,
+                  uplaodTime: DateTime.now(),
+                  name: foodNameController.text.trim(),
+                  description: foodDescriptionController.text.trim(),
+                  foodImageURL: context.read<AddFoodProvider>().foodImageUrl!,
+                  isVegetrian: foodIsPureVegetarian,
+                  price: foodPriceController.text.trim(),
+                );
+                FoodDataCRUDSetvices.uploadFoodData(context, data);
+              },
+              child: pressedAddFoodItemButton
+                  ? CircularProgressIndicator(
+                      color: white,
+                    )
+                  : Text(
+                      "Add Food",
+                      style: AppTextStyles.body16Bold.copyWith(
+                        color: white,
+                      ),
+                    ),
             )
           ],
         ),

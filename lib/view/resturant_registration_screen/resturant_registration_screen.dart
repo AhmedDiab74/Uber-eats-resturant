@@ -34,6 +34,7 @@ class _ResturantRegistrationScreenState
   final TextEditingController resturantLicenceNumberController =
       TextEditingController();
   CarouselController controller = CarouselController();
+  bool pressedRegisterationButton = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -143,34 +144,45 @@ class _ResturantRegistrationScreenState
               height: 30.h,
             ),
             ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: black,
-                  minimumSize: Size(90.w, 6.h),
-                ),
-                onPressed: () async {
-                  await context
+              style: ElevatedButton.styleFrom(
+                backgroundColor: black,
+                minimumSize: Size(90.w, 6.h),
+              ),
+              onPressed: () async {
+                setState(() {
+                  pressedRegisterationButton = true;
+                });
+                await context
+                    .read<ResturantRegisterProvider>()
+                    .updateResturantBannerImagesUrl(context);
+                Position currentAddress =
+                    await LocationServices.getCurrentLocation();
+                LocationServices.registerResturantLocationInGeofire();
+
+                RestaurantModel data = RestaurantModel(
+                  restaurantName: resturantNameController.text.trim(),
+                  restaurantLicenseNumber:
+                      resturantLicenceNumberController.text.trim(),
+                  restaurantUID: auth.currentUser!.uid,
+                  address: AddressModel(
+                      latitude: currentAddress.latitude,
+                      longitude: currentAddress.longitude),
+                  bannerImages: context
                       .read<ResturantRegisterProvider>()
-                      .updateResturantBannerImagesUrl(context);
-                  Position currentAddress =
-                      await LocationServices.getCurrentLocation();
-                  RestaurantModel data = RestaurantModel(
-                    restaurantName: resturantNameController.text.trim(),
-                    restaurantLicenseNumber:
-                        resturantLicenceNumberController.text.trim(),
-                    restaurantUID: auth.currentUser!.uid,
-                    address: AddressModel(
-                        latitude: currentAddress.latitude,
-                        longitude: currentAddress.longitude),
-                    bannerImages: context
-                        .read<ResturantRegisterProvider>()
-                        .resturantBannerImagesUrl,
-                  );
-                  ResturantCrudServices.registerResturant(data, context);
-                },
-                child: Text(
-                  "Register",
-                  style: AppTextStyles.body16Bold.copyWith(color: white),
-                ))
+                      .resturantBannerImagesUrl,
+                );
+                ResturantCrudServices.registerResturant(data, context);
+              },
+              child: pressedRegisterationButton
+                  ? Center(
+                      child: CircularProgressIndicator(
+                      color: white,
+                    ))
+                  : Text(
+                      "Register",
+                      style: AppTextStyles.body16Bold.copyWith(color: white),
+                    ),
+            )
           ],
         ),
       ),

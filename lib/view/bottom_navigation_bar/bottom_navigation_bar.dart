@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:ubereatsresturant/view/account/account.dart';
-import 'package:ubereatsresturant/view/add_food_item/add_food_item.dart';
+import 'package:ubereatsresturant/view/add_food_item_screen/add_food_item_screen.dart';
 import 'package:ubereatsresturant/view/home/home.dart';
 import 'package:ubereatsresturant/view/menu_screen/menu_screen.dart';
 import 'package:ubereatsresturant/view/resturant_registration_screen/resturant_registration_screen.dart';
@@ -25,17 +25,10 @@ class _BottomNavigationBarUberEatsState
     return PersistentTabView(
       tabs: [
         PersistentTabConfig(
-          screen: const ResturantRegistrationScreen(),
+          screen: const HomeScreen(),
           item: ItemConfig(
             icon: const FaIcon(FontAwesomeIcons.house),
             title: "Home",
-          ),
-        ),
-        PersistentTabConfig(
-          screen: const StatusScreen(),
-          item: ItemConfig(
-            icon: const FaIcon(FontAwesomeIcons.bars),
-            title: "Status",
           ),
         ),
         PersistentTabConfig(
@@ -43,6 +36,13 @@ class _BottomNavigationBarUberEatsState
           item: ItemConfig(
             icon: const FaIcon(FontAwesomeIcons.list),
             title: "Menu",
+          ),
+        ),
+        PersistentTabConfig(
+          screen: const StatusScreen(),
+          item: ItemConfig(
+            icon: const FaIcon(FontAwesomeIcons.bars),
+            title: "Status",
           ),
         ),
         // PersistentTabConfig(
@@ -53,7 +53,7 @@ class _BottomNavigationBarUberEatsState
         //   ),
         // ),
         PersistentTabConfig(
-          screen: const AddFoodItem(),
+          screen: const AccountScreen(),
           item: ItemConfig(
             icon: const FaIcon(FontAwesomeIcons.person),
             title: "Account",
